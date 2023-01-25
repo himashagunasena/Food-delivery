@@ -5,4 +5,5 @@ class AppColor {
   static const PrimaryColor = Color.fromARGB(255, 255, 197, 48);
   static const titleColor = Color.fromARGB(255, 107, 107, 107);
   static const bgColor = Color.fromARGB(255, 241, 241, 241);
+  static const trans = Color.fromARGB(0, 245, 245, 245);
 }

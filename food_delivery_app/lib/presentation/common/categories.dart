@@ -1,166 +1,114 @@
-// // ignore_for_file: file_names, unused_local_variable
-import 'package:buttons_tabbar/buttons_tabbar.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-// import '../../utils/app_color.dart';
-
-// // ignore: camel_case_types
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:food_delivery_app/presentation/common/category_title.dart';
+import 'package:food_delivery_app/utils/app_color.dart';
+import 'package:food_delivery_app/utils/app_constant.dart';
+import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
-import '../../utils/app_color.dart';
+import '../../model/data.dart';
+import '../../provider/filter.dart';
+import '../../provider/price_increase.dart';
 
 class Categories extends StatefulWidget {
-  const Categories({Key? key}) : super(key: key);
-  State<Categories> createState() => _CategoriesState();
+  //final Products products;
+  const Categories( {Key? key,}) : super(key: key);
+
+  @override
+  _CategoriesState createState() => _CategoriesState();
 }
 
-// ignore: no_logic_in_create_state
 class _CategoriesState extends State<Categories> {
+  List<bool> isCardEnabled = [];
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<FilterItem>(context,
+          listen: false)
+          .product(0);
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-        alignment: Alignment.topCenter,
-        padding: EdgeInsets.only(
-          top: 27,
-        ),
-        child: DefaultTabController(
-          length: 4,
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.,
-            children: <Widget>[
-              ButtonsTabBar(
-                physics: NeverScrollableScrollPhysics(),
-                unselectedBackgroundColor: Colors.white,
-                buttonMargin: EdgeInsets.only(right: 19),
-                backgroundColor: AppColor.PrimaryColor,
-                height: 68,
-                tabs: [
-                  Tab(
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 68,
-                      child: Transform.scale(
-                          scale: 0.6,
-                          child: Image.asset("assets/icons/all.png")),
+    return Padding(
+        padding: EdgeInsets.only(top: 3.h),
+        child: Container(
+        height: 16.h,
+
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              //physics: const NeverScrollableScrollPhysics(),
+
+              //padding: const EdgeInsets.all(6),
+
+              itemCount: Category.categoryItem.length,
+              itemBuilder: (BuildContext context, int index) {
+                isCardEnabled.add(Category.categoryItem[index].select);
+
+    return Consumer<FilterItem>(builder: (context, value,child) {
+    return
+                  Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Provider.of<FilterItem>(context,
+                          listen: false)
+                          .productClear(index);
+                      isCardEnabled.replaceRange(0, isCardEnabled.length, [
+                        for (int i = 0; i < isCardEnabled.length; i++) false
+
+                      ]);
+                     isCardEnabled[index] = true;
+                      AppConstant.click.add(true);
+                          setState(() {});
+                         // AppConstant.filter=value.getIndex;
+
+                // if(Category.categoryItem[index].category==Data.productitem[index].category){
+                //  value.getIndex.add(Data.productitem[index]);
+                        Provider.of<FilterItem>(context,
+                            listen: false)
+                            .product(index);
+                   // print(AppConstant.filter);
+                   //}
+
+                    },
+                    child: Column(
+                      children: [
+                        SizedBox(
+                            width: 20.w,
+                            //height: 11.h,
+                            child: Card(
+                              color: isCardEnabled[index]
+                                  ? AppColor.PrimaryColor
+                                  : Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: Container(
+                                alignment: Alignment.center,
+                                height: 10.h,
+                                width: 15.w,
+                                child: Transform.scale(
+                                    scale: 0.6,
+                                    child: Image.asset(
+                                        Category.categoryItem[index].image)),
+                              ),
+                            )),
+                        // SizedBox(height: 1.h,),
+                        Padding(
+                          padding: EdgeInsets.only(top: 1.h),
+                          child: CatTitle(
+                              title: Category.categoryItem[index].name),
+                        ),
+                        // SizedBox(height: 1.h,),
+                      ],
                     ),
-                  ),
-                  Tab(
-                    child: Container(
-                      alignment: Alignment.topCenter,
-                      width: 68,
-                      child: Transform.scale(
-                          scale: 0.6,
-                          child: Image.asset("assets/icons/pizza 3.png")),
-                    ),
-                  ),
-                  Tab(
-                    child: Container(
-                      width: 68,
-                      child: Transform.scale(
-                          scale: 0.6,
-                          child: Image.asset("assets/icons/drink.png")),
-                    ),
-                  ),
-                  Tab(
-                    child: Container(
-                      width: 68,
-                      child: Transform.scale(
-                          scale: 0.6,
-                          child: Image.asset("assets/icons/asian.png")),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: const [
-                    CatTitle(
-                      title: "All",
-                      left: 0,
-                      right: 0,
-                    ),
-                    CatTitle(
-                      title: "Pizza",
-                      left: 20,
-                      right: 0,
-                    ),
-                    CatTitle(
-                      title: "Drinks",
-                      left: 0,
-                      right: 0,
-                    ),
-                    CatTitle(
-                      title: "Assian",
-                      left: 0,
-                      right: 5,
-                    ),
-                  ]),
-            ],
-          ),
+                  ));
+    } );
+              }),
         ));
   }
 }
-
-//   const Categories({
-//     Key? key,
-//     required this.image,
-//     this.hoverColor,
-//     this.normalColor,
-//     required this.title,
-//   }) : super(key: key);
-//   final String image;
-//   final Color? hoverColor;
-//   final Color? normalColor;
-//   final String title;
-
-//   @override
-//   State<Categories> createState() => _CategoriesState();
-// }
-
-// // ignore: camel_case_types
-// class _CategoriesState extends State<Categories> {
-//   @override
-//   Widget build(BuildContext context) {
-//     final size = MediaQuery.of(context).size;
-//     return Container(
-//       padding: EdgeInsets.only(top: 27),
-//       alignment: Alignment.bottomLeft,
-//       child: Column(
-//         children: [
-//           Ink(
-//             decoration: ShapeDecoration(
-//                 color: AppColor.PrimaryColor,
-//                 shape: RoundedRectangleBorder(
-//                   borderRadius: BorderRadius.circular(7),
-//                 )),
-//             width: 65.0,
-//             height: 65.0,
-
-//             // decoration: BoxDecoration(
-//             //   borderRadius: BorderRadius.circular(10),
-//             //   color: Colors.white,
-//             // ),
-//             child: Transform.scale(
-//               scale: 0.8,
-//               child: IconButton(
-//                 icon: Image.asset(widget.image),
-//                 //iconSize: 50,
-//                 onPressed: () {},
-//               ),
-//             ),
-//           ),
-//           SizedBox(
-//             height: size.width / 40,
-//           ),
-//           Text(
-//             widget.title,
-//             style:
-//                 GoogleFonts.poppins(fontSize: 14, color: AppColor.titleColor),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }

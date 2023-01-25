@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../utils/app_color.dart';
 
@@ -10,12 +11,10 @@ class CatTitle extends StatefulWidget {
   const CatTitle({
     Key? key,
     required this.title,
-    required this.left,
-    required this.right,
   }) : super(key: key);
 
   final String title;
-  final double left, right;
+
 
   @override
   State<CatTitle> createState() => _CatTitleState();
@@ -26,7 +25,7 @@ class _CatTitleState extends State<CatTitle> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: widget.left, right: widget.right, top: 8),
+      //padding: EdgeInsets.only(left: widget.left.w, right: widget.right.w, top: 8),
       child: Text(
         widget.title,
         style: GoogleFonts.poppins(fontSize: 14, color: AppColor.titleColor),

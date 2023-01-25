@@ -1,9 +1,31 @@
-import 'package:flutter/material.dart';
-import 'package:food_delivery_app/presentation/common/bootom_nav.dart';
-import 'package:food_delivery_app/presentation/view/home.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:food_delivery_app/model/data.dart';
+import 'package:food_delivery_app/presentation/view/home.dart';
+import 'package:food_delivery_app/presentation/view/login.dart';
+import 'package:food_delivery_app/presentation/view/signup.dart';
+import 'package:food_delivery_app/provider/filter.dart';
+import 'package:food_delivery_app/provider/location.dart';
+import 'package:food_delivery_app/provider/price_increase.dart';
+import 'package:food_delivery_app/provider/quantity.dart';
+import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
+
+final FirebaseAuth auth = FirebaseAuth.instance;
+User? user = FirebaseAuth.instance.currentUser;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  Provider.debugCheckInvalidValueType = null;
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => PriceIncrease()),
+    ChangeNotifierProvider(create: (ctr) => Quantity()),
+    ChangeNotifierProvider(create: (ctr) => FilterItem()),
+    ChangeNotifierProvider(create: (ctr) => UpdateLocation()),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -12,22 +34,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: BottomNavigation(),
-    );
+    return Sizer(builder: (context, orientation, deviceType) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+            ),
+        home: LogIn(),
+      );
+    });
   }
 }
